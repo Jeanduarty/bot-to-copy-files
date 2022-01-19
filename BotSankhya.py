@@ -1,8 +1,10 @@
 import os 
 import shutil
 import time
+
 from email import message
 from configs import pastaBackupFonte, pastaBackupDestino, TEMPO_ENTRE_CHECKAGENS
+
 
 def PastasOk():
     pastaOk = True
@@ -28,6 +30,7 @@ def TentarBackup(arquivoFonte, arquivoDestino):
         print(f"Ja existe um backup para o arquivo: ${arquivoDestino}")
     return
 
+
 def LoopBackup():
     done = False
     while not done:
@@ -38,9 +41,10 @@ def LoopBackup():
                 #Path dos arquivos
                 arquivoFonte = f"{pastaBackupFonte}\{nomeArquivo}"
                 arquivoDestino= f"{pastaBackupDestino}\{nomeArquivo}"
-                #Condição para copiar arquivos
+
                 TentarBackup(arquivoFonte, arquivoDestino)
                 
+
         except Exception as e:
             print(e)
 
@@ -51,6 +55,7 @@ def Main():
         LoopBackup()
     else:
         print("Abortando backup, pasta fonte não encontrada")
+
 
 if __name__ == "__main__":
     Main()
