@@ -7,11 +7,11 @@ backupFonte = r'C:\Users\jeand\Documents\ProjetoPython\BackupFonteSankhya'
 backupDestino = r'G:\Meu Drive\BackupExternoSankhya'
 
 def VerificarPath():
-    done = False
+    done = True
     if not os.path.exists(backupFonte):
         print(f"Pasta {backupFonte} não existe!")
-        done = True
-    if not os.path.exists(backupDestino) and done == False:
+        done = False
+    if not os.path.exists(backupDestino) and done == True:
         os.mkdir(backupDestino)
     return done
 
@@ -40,7 +40,7 @@ def Backup():
         time.sleep(3600)#Intervalo para executar o programa - 1hora
 
 def Main():
-    if VerificarPath() == False:
+    if VerificarPath() == True:
         Backup()
 
 if __name__ == "__main__":
