@@ -11,6 +11,7 @@ def VerificarPath():
     done = False
     if not os.path.exists(backupFonte):
         print(f"Pasta {backupFonte} não existe!")
+        done = True
     if not os.path.exists(backupDestino) and done == False:
         os.mkdir(backupDestino)
     return done
@@ -18,7 +19,6 @@ def VerificarPath():
 def Backup():
     done = False
     while not done:
-        time.sleep(5)#Intervalo para executar o programa - 1hora
         try:
             #listando os arquivos da pasta
             listaArquivos = os.listdir(backupFonte)
@@ -35,8 +35,10 @@ def Backup():
                         print("Ja existe")
                 else:
                     print("Arquivo não reconhecido")
-        except message as e:
+        except Exception as e:
             print(e)
+
+        time.sleep(3600)#Intervalo para executar o programa - 1hora
 
 def Main():
     if VerificarPath() == False:
