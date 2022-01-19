@@ -1,7 +1,6 @@
 import os 
 import shutil
 import time
-from email import message
 
 #Pegando o Path das pastas 
 backupFonte = r'C:\Users\jeand\Documents\ProjetoPython\BackupFonteSankhya'
@@ -30,11 +29,11 @@ def Backup():
                 if os.path.isfile(arquivoInterno):
                     if not os.path.exists(arquivoExterno):
                         shutil.copy(arquivoInterno,backupDestino)
-                        print("Copiando...")
+                        print("Copiando arquivos...")
                     else:
-                        print("Ja existe")
+                        print("Todos os arquivos já foram copiados!!")
                 else:
-                    print("Arquivo não reconhecido")
+                    print("Não foi possível copiar...")
         except Exception as e:
             print(e)
 
