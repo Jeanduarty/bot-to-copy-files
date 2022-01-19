@@ -2,47 +2,55 @@ import os
 import shutil
 import time
 from email import message
+from configs import pastaBackupFonte, pastaBackupDestino, TEMPO_ENTRE_CHECKAGENS
 
-#Pegando o Path das pastas 
-backupFonte = r'C:\Users\jeand\Documents\ProjetoPython\BackupFonteSankhya'
-backupDestino = r'G:\Meu Drive\BackupExternoSankhya'
+def PastasOk():
+    pastaOk = True
+    if not os.path.exists(pastaBackupFonte):
+        print(f"Pasta Fonte {pastaBackupFonte} não existe!")
+        pastaOk = False
+    elif not os.path.exists(pastaBackupDestino):
+        print(f"Pasta Destino {pastaBackupFonte} não existe. Criando pasta Destino")
+        os.mkdir(pastaBackupDestino)
+        
+    return pastaOk
 
-def VerificarPath():
-    done = False
-    if not os.path.exists(backupFonte):
-        print(f"Pasta {backupFonte} não existe!")
-        done = True
-    if not os.path.exists(backupDestino) and done == False:
-        os.mkdir(backupDestino)
-    return done
+def TentarBackup(arquivoFonte, arquivoDestino):
+    if not os.path.exists(arquivoDestino):
+        print(f"Arquivo fonte não encontrado ${arquivoFonte} - Abortando Backup")
+        return
+        
+    
+    if not os.path.exists(arquivoDestino):
+        shutil.copy(arquivoFonte, arquivoDestino)
+        print(f"Copiando... ${arquivoFonte} -> ${arquivoDestino}")
+    else:
+        print(f"Ja existe um backup para o arquivo: ${arquivoDestino}")
+    return
 
-def Backup():
+def LoopBackup():
     done = False
     while not done:
         try:
             #listando os arquivos da pasta
-            listaArquivos = os.listdir(backupFonte)
-            for arquivo in listaArquivos:
+            nomesArquivos = os.listdir(pastaBackupFonte)
+            for nomeArquivo in nomesArquivos:
                 #Path dos arquivos
-                arquivoInterno = f"{backupFonte}\{arquivo}"
-                arquivoExterno = f"{backupDestino}\{arquivo}"
+                arquivoFonte = f"{pastaBackupFonte}\{nomeArquivo}"
+                arquivoDestino= f"{pastaBackupDestino}\{nomeArquivo}"
                 #Condição para copiar arquivos
-                if os.path.isfile(arquivoInterno):
-                    if not os.path.exists(arquivoExterno):
-                        shutil.copy(arquivoInterno,backupDestino)
-                        print("Copiando...")
-                    else:
-                        print("Ja existe")
-                else:
-                    print("Arquivo não reconhecido")
+                TentarBackup(arquivoFonte, arquivoDestino)
+                
         except Exception as e:
             print(e)
 
-        time.sleep(3600)#Intervalo para executar o programa - 1hora
+        time.sleep(MINUTOS_ENTRE_CHECKAGENS*60) # TODO: No futuro, avaliar se teria uma melhor forma de esperar esse tempo entre as checkagens
 
 def Main():
-    if VerificarPath() == False:
-        Backup()
+    if PastasOk():
+        LoopBackup()
+    else:
+        print("Abortando backup, pasta fonte não encontrada")
 
 if __name__ == "__main__":
     Main()
