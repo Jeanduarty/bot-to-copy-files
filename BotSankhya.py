@@ -1,47 +1,47 @@
 import os 
 import shutil
 import time
-
-#Pegando o Path das pastas 
-backupFonte = r'C:\Users\jeand\Documents\ProjetoPython\BackupFonteSankhya'
-backupDestino = r'G:\Meu Drive\BackupExternoSankhya'
+from configs import BACKUPFONTE,BACKUPDESTINO,MINUTOS_ENTRE_CHECKAGENS
 
 def VerificarPath():
     done = True
-    if not os.path.exists(backupFonte):
-        print(f"Pasta {backupFonte} não existe!")
+    if not os.path.exists(BACKUPFONTE):
+        print(f"Pasta {BACKUPFONTE} não existe!\nAbortando backup!")
         done = False
-    if not os.path.exists(backupDestino) and done == True:
-        os.mkdir(backupDestino)
+    if not os.path.exists(BACKUPDESTINO) and done == True:
+        os.mkdir(BACKUPDESTINO)
     return done
 
-def Backup():
+def Backup(arquivoFonte,arquivoDestino):
+    if not os.path.exists(arquivoDestino):
+        shutil.copy(arquivoFonte, arquivoDestino)
+        print(f"Copiando... ${arquivoFonte} -> ${arquivoDestino}")
+    else:
+        print(f"Ja existe um backup para o arquivo: ${arquivoDestino}")
+
+def LoopBackup():
     done = False
     while not done:
         try:
             #listando os arquivos da pasta
-            listaArquivos = os.listdir(backupFonte)
-            for arquivo in listaArquivos:
-                #Path dos arquivos
-                arquivoInterno = f"{backupFonte}\{arquivo}"
-                arquivoExterno = f"{backupDestino}\{arquivo}"
+            nomesArquivos = os.listdir(BACKUPFONTE)
+            for arquivo in nomesArquivos:
+                arquivoFonte = f"{BACKUPFONTE}\{arquivo}"
+                arquivoDestino = f"{BACKUPDESTINO}\{arquivo}"
                 #Condição para copiar arquivos
-                if os.path.isfile(arquivoInterno):
-                    if not os.path.exists(arquivoExterno):
-                        shutil.copy(arquivoInterno,backupDestino)
-                        print("Copiando arquivos...")
-                    else:
-                        print("Todos os arquivos já foram copiados!!")
+                if os.path.isfile(arquivoFonte):
+                    Backup(arquivoFonte,arquivoDestino)
                 else:
-                    print("Não foi possível copiar...")
+                    print(f"Não foi possível copiar o {arquivoFonte}")
+
         except Exception as e:
             print(e)
 
-        time.sleep(3600)#Intervalo para executar o programa - 1hora
+        time.sleep(MINUTOS_ENTRE_CHECKAGENS * 60)#Intervalo para executar o programa - 30 minutos
 
 def Main():
-    if VerificarPath() == True:
-        Backup()
+    if VerificarPath():
+        LoopBackup()
 
 if __name__ == "__main__":
     Main()
