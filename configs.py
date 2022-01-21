@@ -1,5 +1,5 @@
 #Alterar os paths de acordo com as futuras pastas
-BACKUPFONTE = r'C:\Users\jeand\exemplo...'
-BACKUPDESTINO = r'G:\Meu Drive\exemplo...'
+BACKUPFONTE = r'C:\Users\jeand\Documents\ProjetoPython\BackupFonteSankhya'
+BACKUPDESTINO = r'G:\Meu Drive\BackupSankhya'
 
-MINUTOS_ENTRE_CHECKAGENS = 30 # em minutos
+HORAS_ENTRE_CHECKAGENS = 11 * 60 # Estou convertendo as horas em minutos 
