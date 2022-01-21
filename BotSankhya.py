@@ -29,7 +29,7 @@ def LoopBackup():
     while not done:
         relogio = localtime()
         horas = relogio[3] #Indice 3 são as horas.
-        if horas == 16 or horas == 9:
+        if horas == 21 or horas == 9:
             try:
                 #listando os arquivos da pasta
                 nomesArquivos = listdir(BACKUPFONTE)
