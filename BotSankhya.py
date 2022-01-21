@@ -1,20 +1,25 @@
-import os 
-import shutil
-import time
-from configs import BACKUPFONTE,BACKUPDESTINO,MINUTOS_ENTRE_CHECKAGENS
+from os import listdir, mkdir
+from os.path import exists, isfile
+from shutil import copy
+from time import localtime, sleep
+from configs import BACKUPFONTE,BACKUPDESTINO, HORAS_ENTRE_CHECKAGENS
 
 def VerificarPath():
     done = True
-    if not os.path.exists(BACKUPFONTE):
+    if not exists(BACKUPFONTE):
         print(f"Pasta {BACKUPFONTE} não existe!\nAbortando backup!")
         done = False
-    if not os.path.exists(BACKUPDESTINO) and done == True:
-        os.mkdir(BACKUPDESTINO)
+    if not exists(BACKUPDESTINO) and done == True:
+        try:
+            mkdir(BACKUPDESTINO)
+        except:
+            print("Disco não encontrado!")
+            done = False
     return done
 
 def Backup(arquivoFonte,arquivoDestino):
-    if not os.path.exists(arquivoDestino):
-        shutil.copy(arquivoFonte, arquivoDestino)
+    if not exists(arquivoDestino):
+        copy(arquivoFonte, arquivoDestino)
         print(f"Copiando... ${arquivoFonte} -> ${arquivoDestino}")
     else:
         print(f"Ja existe um backup para o arquivo: ${arquivoDestino}")
@@ -22,22 +27,23 @@ def Backup(arquivoFonte,arquivoDestino):
 def LoopBackup():
     done = False
     while not done:
-        try:
-            #listando os arquivos da pasta
-            nomesArquivos = os.listdir(BACKUPFONTE)
-            for arquivo in nomesArquivos:
-                arquivoFonte = f"{BACKUPFONTE}\{arquivo}"
-                arquivoDestino = f"{BACKUPDESTINO}\{arquivo}"
-                #Condição para copiar arquivos
-                if os.path.isfile(arquivoFonte):
-                    Backup(arquivoFonte,arquivoDestino)
-                else:
-                    print(f"Não foi possível copiar o {arquivoFonte}")
-
-        except Exception as e:
-            print(e)
-
-        time.sleep(MINUTOS_ENTRE_CHECKAGENS * 60)#Intervalo para executar o programa - 30 minutos
+        relogio = localtime()
+        horas = relogio[3] #Indice 3 são as horas.
+        if horas == 16 or horas == 9:
+            try:
+                #listando os arquivos da pasta
+                nomesArquivos = listdir(BACKUPFONTE)
+                for arquivo in nomesArquivos:
+                    arquivoFonte = f"{BACKUPFONTE}\{arquivo}"
+                    arquivoDestino = f"{BACKUPDESTINO}\{arquivo}"
+                    #Condição para copiar arquivos
+                    if isfile(arquivoFonte):
+                        Backup(arquivoFonte,arquivoDestino)
+                    else:
+                        print(f"Não foi possível copiar o {arquivoFonte}")             
+            except Exception as e:
+                print(e)
+        sleep(HORAS_ENTRE_CHECKAGENS * 60) #Programei para executar depois de 11 horas
 
 def Main():
     if VerificarPath():
