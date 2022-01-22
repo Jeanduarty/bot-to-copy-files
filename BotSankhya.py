@@ -9,7 +9,7 @@ def VerificarPath():
     if not exists(BACKUPFONTE):
         print(f"Pasta {BACKUPFONTE} não existe!\nAbortando backup!")
         done = False
-    if not exists(BACKUPDESTINO) and done == True:
+    if not exists(BACKUPDESTINO) and done:
         try:
             mkdir(BACKUPDESTINO)
         except:
@@ -17,7 +17,7 @@ def VerificarPath():
             done = False
     return done
 
-def Backup(arquivoFonte,arquivoDestino):
+def Backup(arquivoFonte, arquivoDestino):
     if not exists(arquivoDestino):
         copy(arquivoFonte, arquivoDestino)
         print(f"Copiando... ${arquivoFonte} -> ${arquivoDestino}")
@@ -26,10 +26,13 @@ def Backup(arquivoFonte,arquivoDestino):
 
 def LoopBackup():
     done = False
+    wasVerified = False
     while not done:
         relogio = localtime()
         horas = relogio[3] #Indice 3 são as horas.
-        if horas == 21 or horas == 9:
+        if horas == 22 or horas == 10:
+            wasVerified = False
+        if horas == 21 or horas == 9 and not wasVerified:
             try:
                 #listando os arquivos da pasta
                 nomesArquivos = listdir(BACKUPFONTE)
@@ -38,13 +41,12 @@ def LoopBackup():
                     arquivoDestino = f"{BACKUPDESTINO}\{arquivo}"
                     #Condição para copiar arquivos
                     if isfile(arquivoFonte):
-                        Backup(arquivoFonte,arquivoDestino)
+                        Backup(arquivoFonte, arquivoDestino)
                     else:
-                        print(f"Não foi possível copiar o {arquivoFonte}")             
+                        print(f"Não foi possível copiar o {arquivoFonte}")
+                wasVerified = True
             except Exception as e:
                 print(e)
-        sleep(HORAS_ENTRE_CHECKAGENS * 60) #Programei para executar depois de 11 horas
-
 def Main():
     if VerificarPath():
         LoopBackup()
