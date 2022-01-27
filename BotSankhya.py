@@ -10,7 +10,11 @@ def VerificarPath():
     if not exists(BACKUP_FONTE):
         print(f"Pasta {BACKUP_FONTE} não existe!\nAbortando backup!")
         done = False
+<<<<<<< HEAD
     if not exists(BACKUP_DESTINO) and done:
+=======
+    if not exists(BACKUPDESTINO) and done:
+>>>>>>> 3842f468e8347a7ca2f86f1dee321978a545d851
         try:
             mkdir(BACKUP_DESTINO)
         except:
@@ -18,6 +22,7 @@ def VerificarPath():
             done = False
     return done
 
+<<<<<<< HEAD
 
 def LimiteBackup():
     # listando os arquivos da pasta
@@ -43,18 +48,32 @@ def Backup(arquivoFonte, arquivoDestino, arquivo):
             print(f"Copiando... ${arquivoFonte} -> ${arquivoDestino}")
         except Exception as e:
             print(e)
+=======
+def Backup(arquivoFonte, arquivoDestino):
+    if not exists(arquivoDestino):
+        copy(arquivoFonte, arquivoDestino)
+        print(f"Copiando... ${arquivoFonte} -> ${arquivoDestino}")
+>>>>>>> 3842f468e8347a7ca2f86f1dee321978a545d851
     else:
         print(f"Ja existe um backup para o arquivo: ${arquivoDestino}")
 
 
 def LoopBackup():
     done = False
+    wasVerified = False
     while not done:
         relogio = localtime()
+<<<<<<< HEAD
         horas = relogio[3]  # Indice 3 são as horas.
         if horas == 8 or horas == 20:  # Flag para controlar quando será executado o backup
             liberar = True
         if horas == 9 or horas == 21 and liberar:
+=======
+        horas = relogio[3] #Indice 3 são as horas.
+        if horas == 22 or horas == 10:
+            wasVerified = False
+        if horas == 21 or horas == 9 and not wasVerified:
+>>>>>>> 3842f468e8347a7ca2f86f1dee321978a545d851
             try:
                 # listando os arquivos da pasta
                 nomesArquivos = listdir(BACKUP_FONTE)
@@ -64,6 +83,7 @@ def LoopBackup():
                     nomesArquivos.pop(0)
 
                 for arquivo in nomesArquivos:
+<<<<<<< HEAD
                     # Dando split para pegar o formato do arquivo
                     nome, extensao = splitext(arquivo)
                     # Setando o path completo dos arquivos
@@ -83,6 +103,18 @@ def LoopBackup():
             liberar = False  # Deixando a flag False para não executar mais de uma vez
 
 
+=======
+                    arquivoFonte = f"{BACKUPFONTE}\{arquivo}"
+                    arquivoDestino = f"{BACKUPDESTINO}\{arquivo}"
+                    #Condição para copiar arquivos
+                    if isfile(arquivoFonte):
+                        Backup(arquivoFonte, arquivoDestino)
+                    else:
+                        print(f"Não foi possível copiar o {arquivoFonte}")
+                wasVerified = True
+            except Exception as e:
+                print(e)
+>>>>>>> 3842f468e8347a7ca2f86f1dee321978a545d851
 def Main():
     if VerificarPath():
         LoopBackup()
