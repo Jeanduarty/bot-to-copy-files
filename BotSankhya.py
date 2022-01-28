@@ -2,7 +2,7 @@ from os import listdir, mkdir, remove
 from os.path import exists, splitext
 from shutil import copy
 from time import localtime
-from configs import BACKUP_FONTE, BACKUP_DESTINO, EXTENSAO
+from configs import BACKUP_FONTE, BACKUP_DESTINO, EXTENSAO, INTERVALO_1_BACKUP, INTERVALO_2_BACKUP
 
 
 def VerificarPath():
@@ -52,9 +52,9 @@ def LoopBackup():
     while not done:
         relogio = localtime()
         horas = relogio[3]  # Indice 3 são as horas.
-        if horas == 8 or horas == 20:  # Flag para controlar quando será executado o backup
+        if horas == (INTERVALO_1_BACKUP - 1) or horas == (INTERVALO_2_BACKUP - 1):  # Flag para controlar quando será executado o backup
             wasVerified = True
-        if (horas == 9 or horas == 21) and wasVerified:
+        if (horas == INTERVALO_1_BACKUP or horas == INTERVALO_2_BACKUP) and wasVerified:
             try:
                 # listando os arquivos da pasta
                 nomesArquivos = listdir(BACKUP_FONTE)
